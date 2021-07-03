@@ -17,16 +17,29 @@ let countries_list
 let all_time_chart, days_chart, recover_rate_chart
 
 window.onload = async () => {
-  console.log('bereit...')
+  // console.log('bereit...')
+
+  // init nur beim ersten start der Seite
+  initTheme()
+  initCountryFilter()
+
+  await initAlltimesChart()
+  await initDaysChart()
+  await initRecoveryRate()
   await loadData('Global')
+  await loadCountrySelectList()
+
+  document.querySelector('#country-select-toggle').onclick = () => {
+    document.querySelector('#country-select-list').classList.toggle('active')
+  }
 }
 
 loadData = async (country) => {
   startLoading()
 
-  await initAlltimesChart()
   await loadSummary(country)
   await loadAllTimeChart(country)
+  await loadDaysChart(country)
 
   endLoading()
 }
@@ -71,6 +84,9 @@ loadSummary = async (country) => {
   showConfirmedTotal(summary.TotalConfirmed)
   showRecoveredTotal(summary.TotalRecovered)
   showDeathsTotal(summary.TotalDeaths)
+
+  // erholungsrate
+  await loadRecoveryRate(Math.floor(summary.TotalRecovered / summary.TotalConfirmed * 100))
 
   // länder tabelle
 
@@ -160,6 +176,207 @@ loadAllTimeChart = async (country) => {
     recovered_data = renderWorldData(world_data, CASE_STATUS.recovered)
     deaths_data = renderWorldData(world_data, CASE_STATUS.deaths)
   } else {
+    let confirmed = await covidApi.getCountryAllTimeCases(country, CASE_STATUS.confirmed)
+    let recovered = await covidApi.getCountryAllTimeCases(country, CASE_STATUS.recovered)
+    let deaths = await covidApi.getCountryAllTimeCases(country, CASE_STATUS.deaths)
 
+    confirmed_data = renderData(confirmed)
+    recovered_data = renderData(recovered)
+    deaths_data = renderData(deaths)
+
+    confirmed.forEach(e => {
+      let d = new Date(e.Date)
+      labels.push(`${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`)
+    })
+  }
+
+  let series = [
+    {
+      name: 'Bestätigt',
+      data: confirmed_data
+    },
+    {
+      name: 'Erholt',
+      data: recovered_data
+    },
+    {
+      name: 'Gestorben',
+      data: deaths_data
+    }
+  ]
+
+  all_time_chart.updateOptions({
+    series: series,
+    xaxis: {
+      categories: labels
+    }
+  })
+}
+
+initDaysChart = async () => {
+  let options = {
+    chart: {
+      type: 'line'
+    },
+    colors: [COLORS.confirmed, COLORS.recovered, COLORS.deaths],
+    series: [],
+    xaxis: {
+      categories: [],
+      labels: {
+        show: false
+      }
+    },
+    grid: {
+      show: false
+    },
+    stroke: {
+      curve: 'smooth'
+    }
+  }
+
+  days_chart = new ApexCharts(document.querySelector('#days-chart'), options)
+
+  days_chart.render()
+}
+
+loadDaysChart = async (country) => {
+  let labels = []
+
+  let confirmed_data, recovered_data, deaths_data
+
+  if (isGlobal(country)) {
+    let world_data = await covidApi.getWorldDaysCases()
+    world_data.sort((a, b) => new Date(a.Date) - new Date(b.Date))
+    world_data.forEach(e => {
+      let d = new Date(e.Date)
+      labels.push(`${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`)
+    })
+
+    confirmed_data = renderWorldData(world_data, CASE_STATUS.confirmed)
+    recovered_data = renderWorldData(world_data, CASE_STATUS.recovered)
+    deaths_data = renderWorldData(world_data, CASE_STATUS.deaths)
+  } else {
+    let confirmed = await covidApi.getCountryDaysCases(country, CASE_STATUS.confirmed)
+    let recovered = await covidApi.getCountryDaysCases(country, CASE_STATUS.recovered)
+    let deaths = await covidApi.getCountryDaysCases(country, CASE_STATUS.deaths)
+
+    confirmed_data = renderData(confirmed)
+    recovered_data = renderData(recovered)
+    deaths_data = renderData(deaths)
+
+    confirmed.forEach(e => {
+      let d = new Date(e.Date)
+      labels.push(`${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`)
+    })
+  }
+
+  let series = [
+    {
+      name: 'Bestätigt',
+      data: confirmed_data
+    },
+    {
+      name: 'Erholt',
+      data: recovered_data
+    },
+    {
+      name: 'Gestorben',
+      data: deaths_data
+    }
+  ]
+
+  days_chart.updateOptions({
+    series: series,
+    xaxis: {
+      categories: labels
+    }
+  })
+}
+
+initRecoveryRate = async () => {
+  let options = {
+    chart: {
+      type: 'radialBar',
+      height: '350'
+    },
+    series: [],
+    labels: ['Erholt'],
+    colors: [COLORS.recovered]
+
+  }
+
+  recover_rate_chart = new ApexCharts(document.querySelector('#recover-rate-chart'), options)
+
+  recover_rate_chart.render()
+}
+
+loadRecoveryRate = async (rate) => {
+  recover_rate_chart.updateSeries([rate])
+}
+
+// dunkelmodus switch
+initTheme = () => {
+  let dark_mode_switch = document.querySelector('#darkmode-switch')
+
+  dark_mode_switch.onclick = () => {
+    dark_mode_switch.classList.toggle('dark')
+    body.classList.toggle('dark')
+
+    setDarkChart(body.classList.contains('dark'))
+  }
+}
+// dunkelmodus für charts
+setDarkChart = (dark) => {
+  let theme = {
+    theme: {
+      mode: dark ? 'dark' : 'light'
+    }
+  }
+  all_time_chart.updateOptions(theme)
+  days_chart.updateOptions(theme)
+  recover_rate_chart.updateOptions(theme)
+}
+
+// länder auswahl
+renderCountrySelectList = (list) => {
+  let country_select_list = document.querySelector('#country-select-list')
+  country_select_list.querySelectorAll('div').forEach(e => e.remove())
+  list.forEach(e => {
+    let item = document.createElement('div')
+    item.classList.add('country-item')
+    item.textContent = e.Country
+
+    item.onclick = async () => {
+      document.querySelector('#country-select span').textContent = e.Country
+      country_select_list.classList.toggle('active')
+      await loadData(e.Slug)
+    }
+    country_select_list.appendChild(item)
+  })
+}
+
+loadCountrySelectList = async () => {
+  let summaryData = await covidApi.getSummary()
+
+  countries_list = summaryData.Countries
+
+  let country_select_list = document.querySelector('#country-select-list')
+  let item = document.createElement('div')
+  item.textContent = 'Global'
+  item.onclick = async () => {
+    document.querySelector('#country-select span').textContent = 'Global'
+    country_select_list.classList.toggle('active')
+    await loadData('Global')
+  }
+  country_select_list.appendChild(item)
+
+  renderCountrySelectList(countries_list)
+}
+
+initCountryFilter = () => {
+  let input = document.querySelector('#country-select-list input')
+  input.onkeyup = () => {
+    let filtered = countries_list.filter(e => e.Country.toLowerCase().includes(input.value))
+    renderCountrySelectList(filtered)
   }
 }

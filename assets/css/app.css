@@ -27,14 +27,12 @@
 .dark {
   --clr-bg-body: #151515;
   --clr-bg-content: #242526;
-  --clr-bg-hover: #dcdcdc;
+  --clr-bg-hover: #151f28;
 
-  --clr-text: #151f28;
+  --clr-text: #dcdcdc;
 }
 
-*,
-*::before,
-*::after {
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -112,7 +110,7 @@ body {
   border-radius: 50%;
   background-color: var(--clr-text);
   color: var(--clr-bg-content);
-  font-size: 2rem;
+  font-size: 1.0rem;
   position: absolute;
   left: 0;
   top: calc(-1 * var(--height) / 2);
@@ -122,7 +120,7 @@ body {
 .darkmode-switch.dark span {
   left: calc(var(--width) - var(--height) * 2);
   background-color: var(--clr-bg-body);
-  columns: var(--clr-text);
+  color: var(--clr-text);
 }
 
 .darkmode-switch span .bxs-moon {
@@ -137,6 +135,39 @@ body {
   display: none;
 }
 /* ende nav */
+
+/* box */
+.box {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  padding: 15px;
+  margin-bottom: 30px;
+}
+
+.dark .box {
+  border: 1px solid var(--clr-bg-content);
+  background-color: var(--clr-bg-body);
+}
+
+.box-hover {
+  transition: transform .2s ease-in-out;
+}
+
+.box-hover:hover {
+  transform: scale(1.05) translateY(-10px);
+  box-shadow: var(--shadow-hover);
+}
+
+.box-header {
+  padding: 10px 0 30px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  position: relative;
+  text-transform: uppercase;
+}
+/* ende box */
 
 /* land auswahl */
 .country-select {
@@ -196,39 +227,6 @@ body {
   background-color: var(--clr-bg-hover);
 }
 /* ende land auswahl */
-
-/* box */
-.box {
-  width: 100%;
-  border-radius: 10px;
-  box-shadow: var(--shadow);
-  padding: 15px;
-  margin-bottom: 30px;
-}
-
-.dark .box {
-  border: 1px solid var(--clr-bg-content);
-  background-color: var(--clr-bg-body);
-}
-
-.box-hover {
-  transition: transform .2s ease-in-out;
-}
-
-.box-hover:hover {
-  transform: scale(1.05) translateY(-10px);
-  box-shadow: var(--shadow-hover);
-}
-
-.box-header {
-  padding: 10px 0 30px;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--clr-text);
-  position: relative;
-  text-transform: uppercase;
-}
-/* ende box */
 
 /* zähler box */
 .count {
@@ -328,7 +326,7 @@ body {
   background-color: var(--clr-bg-body);
   font-size: 10rem;
 
-  visibility: 0;
+  visibility: hidden;
   opacity: 0;
   transition: all .3s ease-in-out;
 }
@@ -345,4 +343,16 @@ body {
   font-size: 1.25rem;
   text-align: center;
   padding: 2rem;
+}
+
+@media only screen and (max-width: 1280px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+@media only screen and (max-width: 850px) {
+  body {
+    font-size: 12px;
+  }
 }
