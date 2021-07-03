@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Covid-19</title>
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/css/grid.css">
+  <link rel="stylesheet" href="./assets/css/app.css">
+</head>
+<body>
+
+  <div class="nav-wrapper">
+    <div class="container">
+      <div class="nav">
+        <a href="" class="logo">
+          C<i class="bx bxs-virus-block bx-tada"></i>VID Übersicht
+        </a>
+        <div class="darkmode-switch">
+          <span>
+            <i class="bx bxs-moon"></i>
+            <i class="bx bxs-sun"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="container">
+      <div class="row">
+        <div class="col-3 col-md-6 col-sm-12">
+          <div class="box">
+            <div class="country-select" id="country-select">
+              <div class="contry-select-toggle" id="country-select-toggle">
+                <span>
+                  Weltweit
+                </span>
+                <i class="bx bx-chevron-down"></i>
+              </div>
+              <div class="country-select-list" id="country-select-list">
+                <input type="text" placeholder="Nach Land suchen">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <!-- left -->
+        <div class="col-8 col-md-12 col-sm-12">
+          <div class="row">
+            <div class="col-4 col-md-4 col-sm-12">
+              <div class="box box-hover">
+                <div class="count count-confirmed">
+                  <div class="count-icon">
+                    <i class="bx bxs-virus"></i>
+                  </div>
+                  <div class="count-info">
+                    <h5 id="confirmed-total">666</h5>
+                    <span>bestätigt</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-4 col-md-4 col-sm-12">
+              <div class="box box-hover">
+                <div class="count count-recovered">
+                  <div class="count-icon">
+                    <i class="bx bxs-smile"></i>
+                  </div>
+                  <div class="count-info">
+                    <h5 id="recovered-total">333</h5>
+                    <span>erholt</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-4 col-md-4 col-sm-12">
+              <div class="box box-hover">
+                <div class="count count-death">
+                  <div class="count-icon">
+                    <i class="bx bxs-sad"></i>
+                  </div>
+                  <div class="count-info">
+                    <h5 id="death-total">123</h5>
+                    <span>gestorben</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="box">
+                <div class="box-header">
+                  Verlauf
+                </div>
+                <div class="box-body">
+                  <div id="all-time-chart"></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-6 col-sm-12">
+              <div class="box">
+                <div class="box-header">
+                  Was ist Covid-19
+                </div>
+                <div class="box-body">
+                  <iframe width="100%" height="315" src="https://www.youtube-nocookie.com/embed/tyAPS6omPlg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-6 col-sm-12">
+              <div class="box">
+                <div class="box-header">
+                  Wie kann ich mich schützen
+                </div>
+                <div class="box-body">
+                  <iframe width="100%" height="315" src="https://www.youtube-nocookie.com/embed/cPm64H0crd4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end left -->
+        <!-- right -->
+        <div class="col-4 col-md-12 col-sm-12">
+          <div class="box">
+            <div class="box-header">
+              30 Tage verlauf
+            </div>
+            <div class="box-body">
+              <div id="days-chart"></div>
+            </div>
+          </div>
+          <div class="box">
+            <div class="box-header">
+              Erholungsgeschwindigkeit
+            </div>
+            <div class="box-body">
+              <div id="recover-rate-chart"></div>
+            </div>
+          </div>
+          <div class="box">
+            <div class="box-header">
+              Länder Ranking
+            </div>
+            <div class="box-body">
+              <table class="table-countries" id="table-countries">
+                <thead>
+                  <tr>
+                    <th>Land</th>
+                    <th>Bestätigt</th>
+                    <th>Erholt</th>
+                    <th>Gestorben</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- end right -->
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Die angezeigten Daten stammen von <a href="https://documenter.getpostman.com/view/10808728/SzS8rjbc#b07f97ba-24f4-4ebe-ad71-97fa35f3b683" target="_blank" rel="noopener noreferrer">covid19api.com</a>
+    <br />
+    Webdesign <a href="" target="_blank" rel="noopener noreferrer"></a>
+  </div>
+
+  <div class="loader">
+    <i class="bx bxs-virus bx-spin"></i>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="./assets/js/fetchApi.js"></script>
+  <script src="./assets/js/covidApi.js"></script>
+  <script src="./assets/js/app.js"></script>
+</body>
+</html>
